@@ -1,6 +1,6 @@
 // slave
 int byte_received = 0;
-int led = 0;
+int led = 13;
 
 void setup() {
   Serial.begin(9600); 
@@ -11,7 +11,5 @@ void loop() {
   if(Serial.available() > 0){ 
     byte_received = Serial.read();
   }
-  digitalWrite(led, byte_received);
-  delay(5000);
 }
 
