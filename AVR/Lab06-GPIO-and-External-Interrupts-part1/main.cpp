@@ -12,12 +12,12 @@ void setup(){
 	DDRH |=  (1 << PH6); // LED   - Pino 9 - Escreve 1 - Saída
 	DDRE &= ~(1 << PE4); // Botão - Pino 2 - Escreve 0 - Entrada
 
-	EICRB |= (1<<ISC41) | (1<<ISC40); //habilitando interrupcao pra borda de subida
-	EIMSK = (1<<INT4);//habilita interrupcoes no int4, pino 2 no arduino
-	sei();//habilita interrupções globais, ativando o bit I do SREG
+	EICRB |= (1<<ISC41) | (1<<ISC40); // Habilita interrupção na borda de subida
+	EIMSK = (1<<INT4);                // Interrupção INT4
+	sei();                            // Habilita interrupções globais, ativando bit I no SREG
 }
 
-bool debounce(){
+bool debounce(){         // Função simulando millis
 	_delay_ms(300);
 	if (PINE & (1 << PE4))
 		return true;
@@ -30,11 +30,7 @@ int main(){
 	while(true);
 }
 
-ISR(INT4_vect){ //trata a interrup externa 4
+ISR(INT4_vect){           // Trata interrupção externa
 	if (debounce())
-		//PORTH ^= (1<<PH6);
-		PINH |= (1<<PH6);
-		// port = escrever, escrever 1 ou zero na saida
-		// ddr = configura modo de operacao, leitura ou escrirta, saida ou entrada
-		// pin = le o stado do pino e muda ele (quando de entrada)
+		PINH |= (1<<PH6); // Muda o estado do bit
 }

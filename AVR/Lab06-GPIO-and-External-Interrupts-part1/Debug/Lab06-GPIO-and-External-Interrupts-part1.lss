@@ -189,7 +189,7 @@ void setup(){
  122:	fc 01       	movw	r30, r24
  124:	20 83       	st	Z, r18
 
-	EICRB |= (1<<ISC41) | (1<<ISC40); //habilitando interrupcao pra borda de subida
+	EICRB |= (1<<ISC41) | (1<<ISC40); // Habilita interrupção na borda de subida
  126:	8a e6       	ldi	r24, 0x6A	; 106
  128:	90 e0       	ldi	r25, 0x00	; 0
  12a:	2a e6       	ldi	r18, 0x6A	; 106
@@ -199,13 +199,13 @@ void setup(){
  132:	23 60       	ori	r18, 0x03	; 3
  134:	fc 01       	movw	r30, r24
  136:	20 83       	st	Z, r18
-	EIMSK = (1<<INT4);//habilita interrupcoes no int4, pino 2 no arduino
+	EIMSK = (1<<INT4);                // Interrupção INT4
  138:	8d e3       	ldi	r24, 0x3D	; 61
  13a:	90 e0       	ldi	r25, 0x00	; 0
  13c:	20 e1       	ldi	r18, 0x10	; 16
  13e:	fc 01       	movw	r30, r24
  140:	20 83       	st	Z, r18
-	sei();//habilita interrupções globais, ativando o bit I do SREG
+	sei();                            // Habilita interrupções globais, ativando bit I no SREG
  142:	78 94       	sei
 }
  144:	00 00       	nop
@@ -215,7 +215,7 @@ void setup(){
 
 0000014c <_Z8debouncev>:
 
-bool debounce(){
+bool debounce(){         // Função simulando millis
  14c:	cf 93       	push	r28
  14e:	df 93       	push	r29
  150:	cd b7       	in	r28, 0x3d	; 61
@@ -409,7 +409,7 @@ int main(){
 00000276 <__vector_5>:
 }
 
-ISR(INT4_vect){ //trata a interrup externa 4
+ISR(INT4_vect){           // Trata interrupção externa
  276:	1f 92       	push	r1
  278:	0f 92       	push	r0
  27a:	00 90 5f 00 	lds	r0, 0x005F	; 0x80005f <__TEXT_REGION_LENGTH__+0x70005f>
@@ -437,8 +437,7 @@ ISR(INT4_vect){ //trata a interrup externa 4
  2a8:	51 df       	rcall	.-350    	; 0x14c <_Z8debouncev>
  2aa:	88 23       	and	r24, r24
  2ac:	49 f0       	breq	.+18     	; 0x2c0 <__vector_5+0x4a>
-		//PORTH ^= (1<<PH6);
-		PINH |= (1<<PH6);
+		PINH |= (1<<PH6); // Muda o estado do bit
  2ae:	80 e0       	ldi	r24, 0x00	; 0
  2b0:	91 e0       	ldi	r25, 0x01	; 1
  2b2:	20 e0       	ldi	r18, 0x00	; 0
@@ -448,9 +447,6 @@ ISR(INT4_vect){ //trata a interrup externa 4
  2ba:	20 64       	ori	r18, 0x40	; 64
  2bc:	fc 01       	movw	r30, r24
  2be:	20 83       	st	Z, r18
-		// port = escrever, escrever 1 ou zero na saida
-		// ddr = configura modo de operacao, leitura ou escrirta, saida ou entrada
-		// pin = le o stado do pino e muda ele (quando de entrada)
 }
  2c0:	00 00       	nop
  2c2:	df 91       	pop	r29

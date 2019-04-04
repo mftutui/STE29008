@@ -316,17 +316,17 @@ Desmontagem da seção .text:
      21c:	f1 ce       	rjmp	.-542    	; 0x0 <__vectors>
 
 0000021e <_Z8adc_initv>:
+#define MYUBRR (FOSC/16/BAUD)-1
 
 float analog_value, digital_value;
 uint8_t channel = 5;
 
-void adc_init(void)
-{
+void adc_init(void){
      21e:	cf 93       	push	r28
      220:	df 93       	push	r29
      222:	cd b7       	in	r28, 0x3d	; 61
      224:	de b7       	in	r29, 0x3e	; 62
-	ADMUX |= (1<<REFS0); //Set voltage reference to Avcc (5v)
+	ADMUX |= (1<<REFS0);       // Tensão de refência
      226:	8c e7       	ldi	r24, 0x7C	; 124
      228:	90 e0       	ldi	r25, 0x00	; 0
      22a:	2c e7       	ldi	r18, 0x7C	; 124
@@ -336,7 +336,7 @@ void adc_init(void)
      232:	20 64       	ori	r18, 0x40	; 64
      234:	fc 01       	movw	r30, r24
      236:	20 83       	st	Z, r18
-	ADCSRA |= (1<<ADEN); //Turn on ADC
+	ADCSRA |= (1<<ADEN);       // ADC
      238:	8a e7       	ldi	r24, 0x7A	; 122
      23a:	90 e0       	ldi	r25, 0x00	; 0
      23c:	2a e7       	ldi	r18, 0x7A	; 122
@@ -361,7 +361,7 @@ uint16_t read_adc(uint8_t channel){
      258:	cd b7       	in	r28, 0x3d	; 61
      25a:	de b7       	in	r29, 0x3e	; 62
      25c:	89 83       	std	Y+1, r24	; 0x01
-	ADMUX &= 0xE0;           //Clear bits MUX0-4
+	ADMUX &= 0xE0;             // Limpa MUX
      25e:	8c e7       	ldi	r24, 0x7C	; 124
      260:	90 e0       	ldi	r25, 0x00	; 0
      262:	2c e7       	ldi	r18, 0x7C	; 124
@@ -371,7 +371,7 @@ uint16_t read_adc(uint8_t channel){
      26a:	20 7e       	andi	r18, 0xE0	; 224
      26c:	fc 01       	movw	r30, r24
      26e:	20 83       	st	Z, r18
-	ADMUX |= channel&0x07;   //Defines the new ADC channel to be read by setting bits MUX0-2
+	ADMUX |= channel&0x07;     // Canal a ser lido
      270:	8c e7       	ldi	r24, 0x7C	; 124
      272:	90 e0       	ldi	r25, 0x00	; 0
      274:	2c e7       	ldi	r18, 0x7C	; 124
@@ -384,14 +384,14 @@ uint16_t read_adc(uint8_t channel){
      282:	23 2b       	or	r18, r19
      284:	fc 01       	movw	r30, r24
      286:	20 83       	st	Z, r18
-	ADCSRB = channel&(1<<3); //Set MUX5                       // DAR UMA OLHADA NA PAG 282
+	ADCSRB = channel&(1<<3);   // MUX5
      288:	8b e7       	ldi	r24, 0x7B	; 123
      28a:	90 e0       	ldi	r25, 0x00	; 0
      28c:	29 81       	ldd	r18, Y+1	; 0x01
      28e:	28 70       	andi	r18, 0x08	; 8
      290:	fc 01       	movw	r30, r24
      292:	20 83       	st	Z, r18
-	ADCSRA |= (1<<ADSC);      //Starts a new conversion
+	ADCSRA |= (1<<ADSC);       // Inicia nova conversão
      294:	8a e7       	ldi	r24, 0x7A	; 122
      296:	90 e0       	ldi	r25, 0x00	; 0
      298:	2a e7       	ldi	r18, 0x7A	; 122
@@ -401,7 +401,7 @@ uint16_t read_adc(uint8_t channel){
      2a0:	20 64       	ori	r18, 0x40	; 64
      2a2:	fc 01       	movw	r30, r24
      2a4:	20 83       	st	Z, r18
-	while(ADCSRA & (1<<ADSC));  //Wait until the conversion is done
+	while(ADCSRA & (1<<ADSC)); // Espera conversão
      2a6:	8a e7       	ldi	r24, 0x7A	; 122
      2a8:	90 e0       	ldi	r25, 0x00	; 0
      2aa:	fc 01       	movw	r30, r24
@@ -417,7 +417,7 @@ uint16_t read_adc(uint8_t channel){
      2be:	22 23       	and	r18, r18
      2c0:	09 f0       	breq	.+2      	; 0x2c4 <_Z8read_adch+0x72>
      2c2:	f1 cf       	rjmp	.-30     	; 0x2a6 <_Z8read_adch+0x54>
-	return ADCW;  //Returns the ADC value of the chosen channel
+	return ADCW;               // Retorna o valor para o canal
      2c4:	88 e7       	ldi	r24, 0x78	; 120
      2c6:	90 e0       	ldi	r25, 0x00	; 0
      2c8:	fc 01       	movw	r30, r24
@@ -431,8 +431,7 @@ uint16_t read_adc(uint8_t channel){
 
 000002d6 <_Z10USART_Initj>:
 
-void USART_Init(unsigned int ubrr)
-{
+void USART_Init(unsigned int ubrr){
      2d6:	cf 93       	push	r28
      2d8:	df 93       	push	r29
      2da:	1f 92       	push	r1
@@ -441,7 +440,7 @@ void USART_Init(unsigned int ubrr)
      2e0:	de b7       	in	r29, 0x3e	; 62
      2e2:	9a 83       	std	Y+2, r25	; 0x02
      2e4:	89 83       	std	Y+1, r24	; 0x01
-	UBRR0H = (unsigned char)(ubrr>>8); //Ajusta a taxa de transmissão
+	UBRR0H = (unsigned char)(ubrr>>8); // Taxa de transmissão
      2e6:	85 ec       	ldi	r24, 0xC5	; 197
      2e8:	90 e0       	ldi	r25, 0x00	; 0
      2ea:	29 81       	ldd	r18, Y+1	; 0x01
@@ -456,16 +455,14 @@ void USART_Init(unsigned int ubrr)
      2fa:	29 81       	ldd	r18, Y+1	; 0x01
      2fc:	fc 01       	movw	r30, r24
      2fe:	20 83       	st	Z, r18
-	UCSR0B = (1<<RXEN0)|(1<<TXEN0);
+	UCSR0B = (1<<RXEN0)|(1<<TXEN0);    // Habilita RX e TX
      300:	81 ec       	ldi	r24, 0xC1	; 193
      302:	90 e0       	ldi	r25, 0x00	; 0
      304:	28 e1       	ldi	r18, 0x18	; 24
      306:	fc 01       	movw	r30, r24
      308:	20 83       	st	Z, r18
-	//Habilita o transmissor e o receptor
 
-	//Ajusta o formato do frame:
-	UCSR0C &= ~(1<<USBS0);
+	UCSR0C &= ~(1<<USBS0);             // Formato do frame
      30a:	82 ec       	ldi	r24, 0xC2	; 194
      30c:	90 e0       	ldi	r25, 0x00	; 0
      30e:	22 ec       	ldi	r18, 0xC2	; 194
@@ -495,16 +492,14 @@ void USART_Init(unsigned int ubrr)
 
 0000033a <_Z14USART_Transmith>:
 
-void USART_Transmit( uint8_t data )
-{
+void USART_Transmit( uint8_t data ){
      33a:	cf 93       	push	r28
      33c:	df 93       	push	r29
      33e:	1f 92       	push	r1
      340:	cd b7       	in	r28, 0x3d	; 61
      342:	de b7       	in	r29, 0x3e	; 62
      344:	89 83       	std	Y+1, r24	; 0x01
-	/* Wait for empty transmit buffer */
-	while ( !( UCSR0A & (1<<UDRE0)) );
+	while ( !( UCSR0A & (1<<UDRE0)) ); // Espera para transmitir
      346:	80 ec       	ldi	r24, 0xC0	; 192
      348:	90 e0       	ldi	r25, 0x00	; 0
      34a:	fc 01       	movw	r30, r24
@@ -520,9 +515,7 @@ void USART_Transmit( uint8_t data )
      35e:	22 23       	and	r18, r18
      360:	09 f0       	breq	.+2      	; 0x364 <_Z14USART_Transmith+0x2a>
      362:	f1 cf       	rjmp	.-30     	; 0x346 <_Z14USART_Transmith+0xc>
-
-	/* Put data into buffer, sends the data */
-	UDR0 = data;
+	UDR0 = data;                       // Envia dado
      364:	86 ec       	ldi	r24, 0xC6	; 198
      366:	90 e0       	ldi	r25, 0x00	; 0
      368:	29 81       	ldd	r18, Y+1	; 0x01
@@ -537,8 +530,7 @@ void USART_Transmit( uint8_t data )
 
 00000378 <_Z3RMSi>:
 
-int RMS ( int repeat )
-{
+int RMS ( int repeat ){
      378:	cf 93       	push	r28
      37a:	df 93       	push	r29
      37c:	cd b7       	in	r28, 0x3d	; 61
@@ -558,7 +550,7 @@ int RMS ( int repeat )
      396:	1c 82       	std	Y+4, r1	; 0x04
 	float average;
 
-	for (int i = 0; i < repeat; i++)
+	for (int i = 0; i < repeat; i++){
      398:	1e 82       	std	Y+6, r1	; 0x06
      39a:	1d 82       	std	Y+5, r1	; 0x05
      39c:	2d 81       	ldd	r18, Y+5	; 0x05
@@ -569,7 +561,6 @@ int RMS ( int repeat )
      3a6:	39 07       	cpc	r19, r25
      3a8:	0c f0       	brlt	.+2      	; 0x3ac <_Z3RMSi+0x34>
      3aa:	3b c0       	rjmp	.+118    	; 0x422 <__LOCK_REGION_LENGTH__+0x22>
-	{
 		digital_value = read_adc(channel);
      3ac:	80 91 00 02 	lds	r24, 0x0200	; 0x800200 <__data_start>
      3b0:	50 df       	rcall	.-352    	; 0x252 <_Z8read_adch>
@@ -612,19 +603,18 @@ int RMS ( int repeat )
      410:	9a 83       	std	Y+2, r25	; 0x02
      412:	ab 83       	std	Y+3, r26	; 0x03
      414:	bc 83       	std	Y+4, r27	; 0x04
-int RMS ( int repeat )
-{
+
+int RMS ( int repeat ){
 	float accumulated = 0;
 	float average;
 
-	for (int i = 0; i < repeat; i++)
+	for (int i = 0; i < repeat; i++){
      416:	8d 81       	ldd	r24, Y+5	; 0x05
      418:	9e 81       	ldd	r25, Y+6	; 0x06
      41a:	01 96       	adiw	r24, 0x01	; 1
      41c:	9e 83       	std	Y+6, r25	; 0x06
      41e:	8d 83       	std	Y+5, r24	; 0x05
      420:	bd cf       	rjmp	.-134    	; 0x39c <_Z3RMSi+0x24>
-	{
 		digital_value = read_adc(channel);
 		accumulated = accumulated + (digital_value * digital_value);
 	}
@@ -681,8 +671,7 @@ int RMS ( int repeat )
 
 00000480 <main>:
 
-int main( void )
-{
+int main( void ){
      480:	0f 93       	push	r16
      482:	1f 93       	push	r17
      484:	cf 93       	push	r28
@@ -702,8 +691,7 @@ int main( void )
      49c:	87 e6       	ldi	r24, 0x67	; 103
      49e:	90 e0       	ldi	r25, 0x00	; 0
 
-	while(true)
-	{
+	while(true){
 		digital_value = RMS(30);
      4a0:	1a df       	rcall	.-460    	; 0x2d6 <_Z10USART_Initj>
      4a2:	8e e1       	ldi	r24, 0x1E	; 30
@@ -1102,12 +1090,12 @@ int main( void )
      724:	0a de       	rcall	.-1004   	; 0x33a <_Z14USART_Transmith>
      726:	80 e2       	ldi	r24, 0x20	; 32
      728:	08 de       	rcall	.-1008   	; 0x33a <_Z14USART_Transmith>
-int main( void )
-{
+
+int main( void ){
 	adc_init();
 	USART_Init(MYUBRR);
 
-	while(true)
+	while(true){
      72a:	bb ce       	rjmp	.-650    	; 0x4a2 <main+0x22>
 
 0000072c <__subsf3>:

@@ -17,49 +17,39 @@
 float analog_value, digital_value;
 uint8_t channel = 5;
 
-void adc_init(void)
-{
-	ADMUX |= (1<<REFS0); //Set voltage reference to Avcc (5v)
-	ADCSRA |= (1<<ADEN); //Turn on ADC
+void adc_init(void){
+	ADMUX |= (1<<REFS0);       // Tensão de refência
+	ADCSRA |= (1<<ADEN);       // ADC
 }
 
 uint16_t read_adc(uint8_t channel){
-	ADMUX &= 0xE0;           //Clear bits MUX0-4
-	ADMUX |= channel&0x07;   //Defines the new ADC channel to be read by setting bits MUX0-2
-	ADCSRB = channel&(1<<3); //Set MUX5                       // DAR UMA OLHADA NA PAG 282
-	ADCSRA |= (1<<ADSC);      //Starts a new conversion
-	while(ADCSRA & (1<<ADSC));  //Wait until the conversion is done
-	return ADCW;  //Returns the ADC value of the chosen channel
+	ADMUX &= 0xE0;             // Limpa MUX
+	ADMUX |= channel&0x07;     // Canal a ser lido
+	ADCSRB = channel&(1<<3);   // MUX5
+	ADCSRA |= (1<<ADSC);       // Inicia nova conversão
+	while(ADCSRA & (1<<ADSC)); // Espera conversão
+	return ADCW;               // Retorna o valor para o canal
 }
 
-void USART_Init(unsigned int ubrr)
-{
-	UBRR0H = (unsigned char)(ubrr>>8); //Ajusta a taxa de transmissão
+void USART_Init(unsigned int ubrr){
+	UBRR0H = (unsigned char)(ubrr>>8); // Taxa de transmissão
 	UBRR0L = (unsigned char)ubrr;
-	UCSR0B = (1<<RXEN0)|(1<<TXEN0);
-	//Habilita o transmissor e o receptor
+	UCSR0B = (1<<RXEN0)|(1<<TXEN0);    // Habilita RX e TX
 
-	//Ajusta o formato do frame:
-	UCSR0C &= ~(1<<USBS0);
+	UCSR0C &= ~(1<<USBS0);             // Formato do frame
 	UCSR0C |= (3<<UCSZ00);
 }
 
-void USART_Transmit( uint8_t data )
-{
-	/* Wait for empty transmit buffer */
-	while ( !( UCSR0A & (1<<UDRE0)) );
-
-	/* Put data into buffer, sends the data */
-	UDR0 = data;
+void USART_Transmit( uint8_t data ){
+	while ( !( UCSR0A & (1<<UDRE0)) ); // Espera para transmitir
+	UDR0 = data;                       // Envia dado
 }
 
-int RMS ( int repeat )
-{
+int RMS ( int repeat ){
 	float accumulated = 0;
 	float average;
 
-	for (int i = 0; i < repeat; i++)
-	{
+	for (int i = 0; i < repeat; i++){
 		digital_value = read_adc(channel);
 		accumulated = accumulated + (digital_value * digital_value);
 	}
@@ -67,13 +57,11 @@ int RMS ( int repeat )
 	return sqrt(average);
 }
 
-int main( void )
-{
+int main( void ){
 	adc_init();
 	USART_Init(MYUBRR);
 
-	while(true)
-	{
+	while(true){
 		digital_value = RMS(30);
 
 		_delay_ms(2000);

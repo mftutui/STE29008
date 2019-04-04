@@ -12,12 +12,12 @@ void setup(){
 	DDRH |=  (1 << PH6); // LED   - Pino 9 - Escreve 1 - Saída
 	DDRE &= ~(1 << PE4); // Botão - Pino 2 - Escreve 0 - Entrada
 
-	EICRB |= (1<<ISC41) | (1<<ISC40); //habilitando interrupcao pra borda de subida
-	EIMSK = (1<<INT4);//habilita interrupcoes no int4, pino 2 no arduino
-	sei();//habilita interrupções globais, ativando o bit I do SREG
+	EICRB |= (1<<ISC41) | (1<<ISC40); // Habilita interrupção na borda de subida
+	EIMSK = (1<<INT4);                // Interrupção INT4
+	sei();                            // Habilita interrupções globais, ativando bit I no SREG
 }
 
-bool debounce(){
+bool debounce(){         // Função simulando millis
 	_delay_ms(300);
 	if (PINE & (1 << PE4))
 		return true;
@@ -30,14 +30,12 @@ int main(){
 	while(true);
 }
 
-ISR(INT4_vect){ //trata a interrup externa 4
-	if (debounce()){
-
-		while(PINE & (1 << PE4)){ //por causa do modo de ativacao do botao
-								// supoe se que ele esteja sempre alimentado
-			PORTH &= ~(1 << PH6); //Escreve 0 no led
+ISR(INT4_vect){                   // Trata interrupção externa
+	if (debounce())
+		while(PINE & (1 << PE4)){ // Verifica botão (5V com chave aberta e 0V fechada)
+			PORTH &= ~(1 << PH6); // Escreve 0 no LED
 		}
-		PORTH |= (1<< PH6);
+		PORTH |= (1<< PH6);       // Escreve 1 no LED
 	}
 
 }
