@@ -1,7 +1,7 @@
 /*
  * uart.h
  *
- *  Created on: 12/04/2019
+ *  Created on: 17/04/2019
  *      Author: aluno
  */
 
@@ -30,8 +30,16 @@ public:
 		STOPBIT_2 = 8
 	};
 
-	UART(uint32_t baud, DATABITS_t db, PARITY_t parity, STOPBITS_t sb);
+	UART(uint32_t baud = 9600,
+			DATABITS_t db = DATABITS_8,
+			PARITY_t parity = NONE,
+			STOPBITS_t sb = STOPBIT_1);
+
+	//UART(uint32_t baud, DATABITS_t db, PARITY_t parity, STOPBITS_t sb);
 	~UART();
+
+	void put(uint8_t data);
+	uint8_t get();
 };
 
 
