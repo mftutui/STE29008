@@ -1,3 +1,4 @@
+
 #include "GPIO_Port.h"
 
 namespace GPIO_PORT {
@@ -40,5 +41,6 @@ bool GPIO_Port::get(uint8_t p) {
 void GPIO_Port::toggle(uint8_t p) {
 	pin = p;
 }
+
 
 } /* namespace GPIO_PORT */

@@ -1,7 +1,9 @@
+
 #ifndef GPIO_PORT_H_
 #define GPIO_PORT_H_
 
 #include <avr/io.h>
+
 
 namespace GPIO_PORT {
 
@@ -23,6 +25,7 @@ extern GPIO_Port * PB;
 extern GPIO_Port * PE;
 extern GPIO_Port * PG;
 extern GPIO_Port * PH;
+
 
 } /* namespace GPIO_PORT */
 #endif /* GPIO_PORT_H_ */

@@ -1,5 +1,12 @@
-#ifndef GPIO_H
-#define GPIO_H
+/*
+ * GPIO.h
+ *
+ *  Created on: 22 de mar de 2017
+ *      Author: aluno
+ */
+
+#ifndef GPIO_H_
+#define GPIO_H_
 
 class GPIO {
 public:
@@ -15,10 +22,10 @@ public:
 	void set(bool val = 1);
 	void clear();
 	void toggle();
-
 private:
 	uint8_t _bit;
 	uint8_t _id;
 };
 
-#endif
+
+#endif /* GPIO_H_ */

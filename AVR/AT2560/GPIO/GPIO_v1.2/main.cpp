@@ -2,6 +2,7 @@
 #include <util/delay.h>
 #include "GPIO.h"
 
+
 //LEDS PLACA (acende com '0')
 GPIO led0(0, GPIO::OUTPUT);		//PE0
 GPIO led1(1, GPIO::OUTPUT);		//PE1
@@ -38,4 +39,5 @@ int main(void){
 		led13.toggle();
 		_delay_ms(1000);
 	}
+
 }
