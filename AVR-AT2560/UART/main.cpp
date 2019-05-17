@@ -1,3 +1,4 @@
+
 /*
  * main.cpp
  *
@@ -6,13 +7,15 @@
  */
 
 
-#include "uart.h"
+#include "UART.h"
 
 int main(){
 
 	UART serial;
 	while(true){
-		uint8_t data = serial.get();
-		serial.put(data);
+		const char data[] = {"shallow now"};
+		serial.puts(data, sizeof(data));
+	    //uint8_t data = serial.get();
+		//serial.puts(data[], sizeof(data));
 	}
 }

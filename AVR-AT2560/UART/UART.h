@@ -37,10 +37,10 @@ public:
 
 	//UART(uint32_t baud, DATABITS_t db, PARITY_t parity, STOPBITS_t sb);
 	~UART();
-
+	void puts(const char data[], int size);
 	void put(uint8_t data);
 	uint8_t get();
-};
 
+};
 
 #endif /* UART_H_ */

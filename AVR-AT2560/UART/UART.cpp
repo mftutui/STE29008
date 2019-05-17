@@ -1,5 +1,6 @@
 #include <avr/io.h>
-#include "uart.h"
+#include <avr/interrupt.h>
+#include "UART.h"
 
 
 UART::UART(uint32_t baud, DATABITS_t db, PARITY_t parity, STOPBITS_t sb)
@@ -21,6 +22,10 @@ void UART::put(uint8_t data){
 	UDR0 = data;
 }
 
-//void UART::puts(const char data){
+void UART::puts(const char data[], int size){
+    int i;
+    for (i = 0; i < size; i++)
+    {
+        put(data[i]);
+    }
 
-//}
